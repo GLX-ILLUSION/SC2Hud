@@ -14,14 +14,26 @@ O projeto **não está completo**: pode faltar **imagens** (os ícones em `data/
 
 ---
 
-## Notas de atualização
+## Changelog
 
-### Importação por URL (Spawning Tool)
+Registo das alterações recentes de comportamento e documentação.
+
+### 2026-05-02 — Filtro por raça no separador **Builds**
+
+- **Filtrar a lista de builds:** após **Atualizar lista**, o painel mostra **Todas as raças** e três botões com ícone (Terran, Protoss, Zerg). Com uma raça escolhida, o menu pendente só lista ficheiros `.json` cujo campo **`"race"`** corresponde a essa raça (valores como `terran`, `protoss`, `zerg` ou formas curtas já reconhecidas pelo parser).
+- **Builds sem `"race"`** (ou raça desconhecida) **só** aparecem quando **Todas as raças** está ativo.
+- **Ícones do filtro** vivem em **`data/icons/common/`** com os nomes **`terran.png`**, **`protoss.png`** e **`zerg.png`**. O carregamento é **restrito a esta pasta e a estes ficheiros** (sem procurar por sufixos nas pastas `terran/` / `protoss/` / `zerg/`), para evitar confusão com ícones de unidades (ex.: *infested terran* a aparecer no botão Terran).
+
+### 2026-05 — Importação por URL (Spawning Tool)
 
 - No separador **Editor** → *Importar do site ou clipboard*, podes colar o **URL completo** de uma página de build em [lotv.spawningtool.com](https://lotv.spawningtool.com/) (só são aceites hosts que terminam em `.spawningtool.com` e endereços com `/build/` no caminho) e carregar em **Importar pela URL** para descarregar a página por **HTTPS** (`winhttp`), extrair o **título** (`<h1>`) e as linhas da **tabela** da build order, e preencher o editor automaticamente — sem copiar a tabela à mão.
 - **Exemplo de ligação:** [https://lotv.spawningtool.com/build/200997/](https://lotv.spawningtool.com/build/200997/) — página *DnS's Adept/Immortal All-In (PvP All-In)* no Spawning Tool.
 - Depois ajusta **nome**, **raça** e **ficheiro** em `user/` como já fazias com a colagem; a raça continua a poder ser inferida do título (ex.: `PvP` → Protoss).
 - **Nota:** se o HTML do site mudar, a importação por URL pode falhar; nesse caso usa **Converter para editor** com o texto colado da tabela. Usa importações moderadas e respeita os termos do serviço.
+
+### 2026-05 — Desempenho da overlay
+
+- O intervalo principal do ciclo da aplicação **adapta-se** ao estado (por exemplo HUD compacta com relógio a correr, rato sobre a janela, ou configurações abertas), para reduzir uso de **CPU** em repouso sem sacrificar fluidez quando o temporizador ou o HUD estão activos.
 
 ---
 
@@ -31,7 +43,7 @@ O projeto **não está completo**: pode faltar **imagens** (os ícones em `data/
 - **Painel de configuração** (tecla **INSERT**): separadores *Match* (relógio), *Builds* (ficheiros JSON), *HUD* (ajuda e colunas), *Editor* (importar por **colagem** ou **URL** do Spawning Tool / editar / gravar builds).
 - **Idioma**: Português (Brasil) e inglês, guardados em ficheiro de definições.
 - **Builds em JSON** em `data/builds/presets/` e `data/builds/user/`.
-- **Ícones opcionais** em `data/icons/` (PNG), organizados por raça e pasta `common`.
+- **Ícones opcionais** em `data/icons/` (PNG), organizados por raça e pasta `common` (incluindo **`terran.png` / `protoss.png` / `zerg.png`** em `common/` para os botões de filtro no separador **Builds**).
 
 ---
 
@@ -84,7 +96,7 @@ data/
     terran/      ← PNGs por nome (ex.: supply_depot.png)
     protoss/
     zerg/
-    common/      ← ex.: minerals.png, gas.png para custos na lista
+    common/      ← minerals.png, gas.png (custos); terran/protoss/zerg.png (filtro de raça em Builds)
 ```
 
 Definições da interface (idioma):
@@ -119,7 +131,8 @@ Definições da interface (idioma):
 
 - Lista ficheiros `.json` em `data/builds` (presets e `user/`).
 - **Atualizar lista** se gravaste um ficheiro novo noutro sítio.
-- Escolhe uma build e **Carregar esta build** para usar no HUD.
+- **Filtro por raça:** **Todas as raças** ou ícones Terran / Protoss / Zerg (`data/icons/common/*.png` — ver **Changelog**). A lista obedece ao campo **`race`** em cada JSON.
+- Escolhe uma build no menu pendente e **Carregar esta build** para usar no HUD.
 
 ### Separador **HUD**
 
@@ -172,6 +185,3 @@ Software fornecido “como está”, sem garantias. Usa por tua conta e risco. N
 
 ---
 
-## Licença
-
-Define a licença do teu código adicionando um ficheiro `LICENSE` na raiz do repositório. As bibliotecas de terceiros (por exemplo Dear ImGui e nlohmann/json) mantêm as respetivas licenças nos projetos originais.
