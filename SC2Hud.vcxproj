@@ -133,7 +133,7 @@
       <AdditionalOptions>/FS %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>d3d9.lib;windowscodecs.lib;ole32.lib;shell32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d9.lib;windowscodecs.lib;ole32.lib;shell32.lib;winhttp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -143,6 +143,7 @@
     <ClCompile Include="BuildOrderStore.cpp" />
     <ClCompile Include="BuildOrderPlayback.cpp" />
     <ClCompile Include="BuildOrderPasteParser.cpp" />
+    <ClCompile Include="SpawningToolImport.cpp" />
     <ClCompile Include="Sc2StaticCosts.cpp" />
     <ClCompile Include="IconTextureCache.cpp" />
     <ClCompile Include="StepIconResolve.cpp" />
@@ -163,6 +164,7 @@
     <ClInclude Include="BuildOrderStore.h" />
     <ClInclude Include="BuildOrderPlayback.h" />
     <ClInclude Include="BuildOrderPasteParser.h" />
+    <ClInclude Include="SpawningToolImport.h" />
     <ClInclude Include="BuildOrderTypes.h" />
     <ClInclude Include="Sc2StaticCosts.h" />
     <ClInclude Include="IconTextureCache.h" />

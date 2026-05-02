@@ -39,6 +39,7 @@ private:
     float m_fOverlayScale = 1.f;
 
     char m_cPasteBuf[32768] = {};
+    char m_cSpawningUrlBuf[2048] = {};
     std::string m_sPasteImportMsg;
 
     char cSaveFileBase[128] = "minha_build";

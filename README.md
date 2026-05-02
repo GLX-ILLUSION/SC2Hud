@@ -1,6 +1,6 @@
 # SC2 Build HUD
 
-Overlay para **Windows** que mostra **build orders** do *StarCraft II* durante a partida: relógio alinhável ao tempo do jogo, lista de passos com ícones e custos estimados, e um editor para importar builds a partir de texto (por exemplo do [Spawning Tool](https://lotv.spawningtool.com/)).
+Overlay para **Windows** que mostra **build orders** do *StarCraft II* durante a partida: relógio alinhável ao tempo do jogo, lista de passos com ícones e custos estimados, e um editor para importar builds a partir de **texto colado** ou **URL direta** de uma página de build no [Spawning Tool](https://lotv.spawningtool.com/) (ex.: [build 200997](https://lotv.spawningtool.com/build/200997/)).
 
 Este projeto é **independente** e **não** é endossado pela Blizzard Entertainment.
 
@@ -14,10 +14,21 @@ O projeto **não está completo**: pode faltar **imagens** (os ícones em `data/
 
 ---
 
+## Notas de atualização
+
+### Importação por URL (Spawning Tool)
+
+- No separador **Editor** → *Importar do site ou clipboard*, podes colar o **URL completo** de uma página de build em [lotv.spawningtool.com](https://lotv.spawningtool.com/) (só são aceites hosts que terminam em `.spawningtool.com` e endereços com `/build/` no caminho) e carregar em **Importar pela URL** para descarregar a página por **HTTPS** (`winhttp`), extrair o **título** (`<h1>`) e as linhas da **tabela** da build order, e preencher o editor automaticamente — sem copiar a tabela à mão.
+- **Exemplo de ligação:** [https://lotv.spawningtool.com/build/200997/](https://lotv.spawningtool.com/build/200997/) — página *DnS's Adept/Immortal All-In (PvP All-In)* no Spawning Tool.
+- Depois ajusta **nome**, **raça** e **ficheiro** em `user/` como já fazias com a colagem; a raça continua a poder ser inferida do título (ex.: `PvP` → Protoss).
+- **Nota:** se o HTML do site mudar, a importação por URL pode falhar; nesse caso usa **Converter para editor** com o texto colado da tabela. Usa importações moderadas e respeita os termos do serviço.
+
+---
+
 ## Funcionalidades
 
 - **HUD compacta** em tela cheia (sempre no topo): tempo decorrido, passo atual, lista **COMING UP**, ícones e custos (mineral/gás) quando disponíveis.
-- **Painel de configuração** (tecla **INSERT**): separadores *Match* (relógio), *Builds* (ficheiros JSON), *HUD* (ajuda e colunas), *Editor* (importar / editar / gravar builds).
+- **Painel de configuração** (tecla **INSERT**): separadores *Match* (relógio), *Builds* (ficheiros JSON), *HUD* (ajuda e colunas), *Editor* (importar por **colagem** ou **URL** do Spawning Tool / editar / gravar builds).
 - **Idioma**: Português (Brasil) e inglês, guardados em ficheiro de definições.
 - **Builds em JSON** em `data/builds/presets/` e `data/builds/user/`.
 - **Ícones opcionais** em `data/icons/` (PNG), organizados por raça e pasta `common`.
@@ -46,7 +57,7 @@ Com o menu fechado (**INSERT**), fica a **HUD compacta** por cima do jogo: **tem
 - **Visual Studio 2022** (ou build tools) com carga de trabalho **Desktop development with C++**.
 - **Windows SDK** compatível.
 - **Direct3D 9** (normalmente disponível no sistema).
-- Bibliotecas ligadas pelo projeto: `d3d9`, `windowscodecs`, `ole32`, `shell32`.
+- Bibliotecas ligadas pelo projeto: `d3d9`, `windowscodecs`, `ole32`, `shell32`, `winhttp` (HTTPS para importar builds por URL).
 
 ---
 
@@ -117,8 +128,8 @@ Definições da interface (idioma):
 
 ### Separador **Editor**
 
-1. Abre o site de builds (botão que abre [https://lotv.spawningtool.com/](https://lotv.spawningtool.com/) no navegador), copia o texto da build ou cola de outra fonte com o mesmo estilo (supply, tempo, ação).
-2. Cola no campo de texto e usa **Converter para editor**.
+1. Abre o site de builds (botão que abre [https://lotv.spawningtool.com/](https://lotv.spawningtool.com/) no navegador).
+2. **Por URL:** cola o link da página da build (ex.: [build 200997](https://lotv.spawningtool.com/build/200997/)) no campo **URL da build (Spawning Tool)** e usa **Importar pela URL** — ou **por texto:** cola a tabela no campo grande e usa **Converter para editor** (supply, tempo, ação; tab ou espaços como antes).
 3. Ajusta **nome, raça e nome do ficheiro** em `user/` (sem `.json`).
 4. **Salvar na lista de builds** grava em `data/builds/user/`. Depois, em **Builds**, usa **Atualizar lista** e carrega o ficheiro.
 5. **Usar no HUD agora** aplica a build atual ao overlay sem obrigar a gravar ficheiro.

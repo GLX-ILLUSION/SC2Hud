@@ -1,6 +1,7 @@
 #include "BuildOrderUi.h"
 
 #include "BuildOrderJson.h"
+#include "SpawningToolImport.h"
 #include "BuildOrderPasteParser.h"
 #include "BuildOrderPlayback.h"
 #include "IconTextureCache.h"
@@ -622,6 +623,29 @@ void BuildOrderHud::RenderEditor()
             ImGui::SetTooltip("%s", UiTr(Tr::TooltipSpawningTool));
         PopHudButtonStyle();
         ImGui::InputTextMultiline("##pastebuild", m_cPasteBuf, sizeof(m_cPasteBuf), ImVec2(-1.f, 130.f));
+        ImGui::Dummy(ImVec2(0.f, 6.f));
+        ImGui::InputText(UiTr(Tr::FieldSpawningToolUrl), m_cSpawningUrlBuf, sizeof(m_cSpawningUrlBuf));
+        if (ImGui::IsItemHovered())
+            ImGui::SetTooltip("%s", UiTr(Tr::TooltipImportUrl));
+        ImGui::Dummy(ImVec2(0.f, 6.f));
+        PushHudButtonStyleAccent();
+        if (ImGui::Button(UiTr(Tr::BtnImportFromUrl), ImVec2(-1.f, 32.f)))
+        {
+            std::string sErr;
+            BuildOrder imported;
+            if (ImportBuildOrderFromSpawningToolUrl(std::string(m_cSpawningUrlBuf), imported, sErr))
+            {
+                m_editor = std::move(imported);
+                BuildOrderPasteSuggestedFileBase(m_editor.sName, cSaveFileBase, sizeof(cSaveFileBase));
+                m_iLastOverlayScrollStep = -999;
+                char msgOk[512];
+                std::snprintf(msgOk, sizeof(msgOk), UiTr(Tr::MsgImportOkFmt), m_editor.vSteps.size());
+                m_sPasteImportMsg = msgOk;
+            }
+            else
+                m_sPasteImportMsg = sErr;
+        }
+        PopHudButtonStyle();
         ImGui::Dummy(ImVec2(0.f, 6.f));
         PushHudButtonStyleAccent();
         if (ImGui::Button(UiTr(Tr::BtnConvert), ImVec2(0.f, 32.f)))

@@ -196,6 +196,15 @@ const char* GuessTerranIcon(const std::string& noteLower)
 
 const char* GuessProtossIcon(const std::string& noteLower)
 {
+    // Gas building: must win before any "…gate" keyword and avoids bad PNG names like *stargate*_*assimilator*.
+    if (noteLower.find("assimilator") != std::string::npos || noteLower.find("assimilador") != std::string::npos)
+        return "assimilator";
+    if (noteLower.find("stalker") != std::string::npos)
+        return "stalker";
+    if (noteLower.find("blink") != std::string::npos)
+        return "blink";
+    if (noteLower.find("probe") != std::string::npos || noteLower.find("sonda") != std::string::npos)
+        return "probe";
     static const char* kws[] = {
         "high templar", "dark templar", "mothership core",
         "robotics bay", "robotics facility", "twilight council", "cybernetics core",
@@ -205,7 +214,6 @@ const char* GuessProtossIcon(const std::string& noteLower)
         "void ray", "star gate", "warp gate",
         "nexus", "nexo", "pylon", "pilao", "pilão", "gateway", "portal",
         "stargate",
-        "assimilator",
         "cybernetics", "cibernetica", "forge", "forja", "robotics", "twilight",
         "photon", "canhao", "canhão",
         "templar",
@@ -213,7 +221,7 @@ const char* GuessProtossIcon(const std::string& noteLower)
         "oracle", "phoenix",
         "immortal", "observer",
         "archon", "carrier", "colossus", "disruptor", "tempest",
-        "mothership", "probe",
+        "mothership",
         "blink", "charge",
     };
     static const char* ids[] = {
@@ -225,7 +233,6 @@ const char* GuessProtossIcon(const std::string& noteLower)
         "voidray", "stargate", "warp_gate",
         "nexus", "nexus", "pylon", "pylon", "pylon", "gateway", "gateway", "gateway",
         "stargate",
-        "assimilator",
         "cybernetics_core", "cybernetics_core", "forge", "forge", "robotics_facility", "twilight_council",
         "photon_cannon", "photon_cannon", "photon_cannon",
         "templar_archives",
@@ -233,7 +240,7 @@ const char* GuessProtossIcon(const std::string& noteLower)
         "oracle", "phoenix",
         "immortal", "observer",
         "archon", "carrier", "colossus", "disruptor", "tempest",
-        "mothership", "probe",
+        "mothership",
         "blink", "charge",
     };
     constexpr size_t n = sizeof(kws) / sizeof(kws[0]);

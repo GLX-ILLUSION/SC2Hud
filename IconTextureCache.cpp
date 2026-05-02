@@ -30,6 +30,7 @@ std::filesystem::path FindIconPngInDirectoryImpl(const std::filesystem::path& ic
     if (!std::filesystem::is_directory(iconDir, ec) || ec)
         return {};
     const std::string wantFile = idLower + ".png";
+    std::vector<std::filesystem::path> vMatch;
     for (const auto& entry : std::filesystem::directory_iterator(iconDir, ec))
     {
         if (ec)
@@ -40,9 +41,30 @@ std::filesystem::path FindIconPngInDirectoryImpl(const std::filesystem::path& ic
         std::string fLower = fname;
         std::transform(fLower.begin(), fLower.end(), fLower.begin(), [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
         if (fLower == wantFile)
-            return entry.path();
+            vMatch.push_back(entry.path());
     }
-    return {};
+    if (vMatch.empty())
+        return {};
+    if (vMatch.size() == 1)
+        return vMatch.front();
+
+    const std::string preferExact = idLower + ".png";
+    for (const auto& p : vMatch)
+    {
+        if (p.filename().string() == preferExact)
+            return p;
+    }
+    std::string sTitle = idLower;
+    if (!sTitle.empty())
+        sTitle[0] = static_cast<char>(std::toupper(static_cast<unsigned char>(sTitle[0])));
+    const std::string preferTitle = sTitle + ".png";
+    for (const auto& p : vMatch)
+    {
+        if (p.filename().string() == preferTitle)
+            return p;
+    }
+    std::sort(vMatch.begin(), vMatch.end());
+    return vMatch.front();
 }
 
 // nomes de packs SC2/comunidade: terran_hellion.png, btn-unit-terran-hellion.png (termina em _hellion ou -hellion)
@@ -71,6 +93,14 @@ std::filesystem::path FindIconPngByIdSuffixInDirectoryImpl(const std::filesystem
             continue;
         const char cSep = stem[stem.size() - idLower.size() - 1];
         if (cSep != '_' && cSep != '-')
+            continue;
+        if (idLower == "assimilator" && fLower.find("stargate") != std::string::npos)
+            continue;
+        if (idLower == "stalker" && fLower.find("adept") != std::string::npos)
+            continue;
+        if (idLower == "blink" && fLower.find("probe") != std::string::npos)
+            continue;
+        if (idLower == "probe" && fLower.find("mothership") != std::string::npos)
             continue;
         return entry.path();
     }
@@ -375,8 +405,10 @@ ImTextureID IconTextureCache::GetIconTexture(BuildRace eRace, const std::string&
 
     static const char* kRaceDirs[] = { "terran", "protoss", "zerg" };
 
-    for (const std::filesystem::path& root : m_vSearchRoots)
+    // Invert: repo `data/icons` (added second) overrides stale copies under x64/Release/etc.
+    for (auto itRoot = m_vSearchRoots.rbegin(); itRoot != m_vSearchRoots.rend(); ++itRoot)
     {
+        const std::filesystem::path& root = *itRoot;
         const std::filesystem::path iconsBase = root / "data" / "icons";
 
         if (eRace == BuildRace::Terran)
