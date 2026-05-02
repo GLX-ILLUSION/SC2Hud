@@ -102,6 +102,8 @@ std::filesystem::path FindIconPngByIdSuffixInDirectoryImpl(const std::filesystem
             continue;
         if (idLower == "probe" && fLower.find("mothership") != std::string::npos)
             continue;
+        if (idLower == "immortal" && fLower.find("phoenix") != std::string::npos)
+            continue;
         return entry.path();
     }
     return {};
@@ -471,6 +473,53 @@ ImTextureID IconTextureCache::GetIconTexture(BuildRace eRace, const std::string&
     if (!tex)
         return GetUnknownTexture();
 
+    m_loadedByKey[key] = tex;
+    return D3D9TexToImId(tex);
+}
+
+ImTextureID IconTextureCache::GetRaceFilterTexture(BuildRace eRace)
+{
+    if (!m_pDevice)
+        return GetUnknownTexture();
+    std::string id;
+    switch (eRace)
+    {
+    case BuildRace::Terran:
+        id = "terran";
+        break;
+    case BuildRace::Protoss:
+        id = "protoss";
+        break;
+    case BuildRace::Zerg:
+        id = "zerg";
+        break;
+    default:
+        return GetUnknownTexture();
+    }
+    const std::string key = std::string("racefilter/") + id;
+    const auto found = m_loadedByKey.find(key);
+    if (found != m_loadedByKey.end())
+        return D3D9TexToImId(found->second);
+
+    std::error_code ec;
+    IDirect3DTexture9* tex = nullptr;
+    for (auto itRoot = m_vSearchRoots.rbegin(); itRoot != m_vSearchRoots.rend(); ++itRoot)
+    {
+        const std::filesystem::path commonDir = (*itRoot) / "data" / "icons" / "common";
+        const std::filesystem::path exact = commonDir / (id + ".png");
+        if (std::filesystem::is_regular_file(exact, ec))
+            tex = LoadPngFile(exact);
+        if (!tex)
+        {
+            const std::filesystem::path pFound = FindIconPngInDirectoryImpl(commonDir, id);
+            if (!pFound.empty())
+                tex = LoadPngFile(pFound);
+        }
+        if (tex)
+            break;
+    }
+    if (!tex)
+        return GetUnknownTexture();
     m_loadedByKey[key] = tex;
     return D3D9TexToImId(tex);
 }

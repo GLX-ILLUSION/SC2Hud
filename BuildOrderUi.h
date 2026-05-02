@@ -15,6 +15,7 @@ public:
 
     void ToggleConfigMenu() { bConfigMenuOpen = !bConfigMenuOpen; }
     bool IsConfigMenuOpen() const { return bConfigMenuOpen; }
+    bool IsMatchClockRunning() const { return m_clock.IsRunning(); }
 
     void SetIconCache(IconTextureCache* pCache) { m_pIcons = pCache; }
 
@@ -32,6 +33,8 @@ private:
     BuildOrder m_editor;
 
     int iSelectedList = -1;
+
+    BuildRace m_buildBrowserRaceFilter = BuildRace::Unknown;
     int m_iLastOverlayScrollStep = -999;
     bool m_bShowComingUp = true;
 

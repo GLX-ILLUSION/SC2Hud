@@ -10,6 +10,7 @@ struct BuildFileInfo
 {
     std::string sRelativePath;
     std::string sDisplayName;
+    BuildRace eRace = BuildRace::Unknown;
 };
 
 class BuildOrderStore

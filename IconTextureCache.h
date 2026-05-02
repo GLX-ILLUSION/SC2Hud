@@ -20,6 +20,8 @@ public:
     void InvalidateAll();
 
     ImTextureID GetIconTexture(BuildRace eRace, const std::string& sIconId);
+    /** Loads only `data/icons/common/<race>.png` (exact filenames, no *_terran suffix scans). Use for HUD race picker. */
+    ImTextureID GetRaceFilterTexture(BuildRace eRace);
     ImTextureID GetUiIconTexture(const std::string& sName);
 
     ImTextureID GetUnknownTexture();

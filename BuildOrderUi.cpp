@@ -527,43 +527,116 @@ void BuildOrderHud::RenderBuildPickerAndViewer()
         m_store.RefreshFileList();
     PopHudButtonStyle();
 
+    ImGui::Dummy(ImVec2(0.f, 6.f));
+    ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(135, 185, 215, 255));
+    ImGui::TextWrapped("%s", UiTr(Tr::BuildPickRaceFilterHint));
+    ImGui::PopStyleColor();
+    ImGui::Dummy(ImVec2(0.f, 4.f));
+
+    PushHudButtonStyleAccent();
+    if (ImGui::Button(UiTr(Tr::BtnBuildFilterAll)))
+        m_buildBrowserRaceFilter = BuildRace::Unknown;
+    PopHudButtonStyle();
+
+    const float fRaceIconBtn = 40.f;
+    if (m_pIcons)
+    {
+        auto DrawRaceFilterIcon = [&](BuildRace eRace, const char* sBtnId) {
+            ImGui::SameLine();
+            if (m_buildBrowserRaceFilter == eRace)
+            {
+                ImGui::PushStyleColor(ImGuiCol_Button, IM_COL32(72, 120, 165, 255));
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, IM_COL32(92, 145, 198, 255));
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, IM_COL32(72, 120, 165, 255));
+            }
+            ImTextureID tex = m_pIcons->GetRaceFilterTexture(eRace);
+            const bool bClick = ImGui::ImageButton(sBtnId, ImTextureRef(tex), ImVec2(fRaceIconBtn, fRaceIconBtn));
+            if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal))
+            {
+                char cTipBuf[160];
+                std::snprintf(cTipBuf, sizeof(cTipBuf), UiTr(Tr::TooltipBuildFilterRace), RaceToLabel(eRace));
+                ImGui::SetTooltip("%s", cTipBuf);
+            }
+            if (m_buildBrowserRaceFilter == eRace)
+                ImGui::PopStyleColor(3);
+            if (bClick)
+                m_buildBrowserRaceFilter = eRace;
+        };
+        DrawRaceFilterIcon(BuildRace::Terran, "##race_filt_terran");
+        DrawRaceFilterIcon(BuildRace::Protoss, "##race_filt_protoss");
+        DrawRaceFilterIcon(BuildRace::Zerg, "##race_filt_zerg");
+    }
+
     const auto& v = m_store.GetKnownBuilds();
+
+    std::vector<int> vPick;
+    vPick.reserve(v.size());
+    for (int iIdx = 0; iIdx < static_cast<int>(v.size()); ++iIdx)
+    {
+        const BuildRace eRaceFile = v[static_cast<size_t>(iIdx)].eRace;
+        if (m_buildBrowserRaceFilter == BuildRace::Unknown)
+            vPick.push_back(iIdx);
+        else if (eRaceFile == m_buildBrowserRaceFilter)
+            vPick.push_back(iIdx);
+    }
+
     if (!v.empty())
     {
         if (iSelectedList < 0 || iSelectedList >= static_cast<int>(v.size()))
             iSelectedList = 0;
-        ImGui::Dummy(ImVec2(0.f, 6.f));
-        ImGui::AlignTextToFramePadding();
-        ImGui::TextUnformatted(UiTr(Tr::BuildSavedLabel));
-        ImGui::SetNextItemWidth(-1);
-        std::string comboPreview = v[static_cast<size_t>(iSelectedList)].sDisplayName;
-        if (ImGui::BeginCombo("##buildlist", comboPreview.c_str()))
+        bool bSelInFiltered = false;
+        for (int idx : vPick)
         {
-            for (int i = 0; i < static_cast<int>(v.size()); ++i)
+            if (idx == iSelectedList)
             {
-                const bool bSel = i == iSelectedList;
-                if (ImGui::Selectable(v[static_cast<size_t>(i)].sDisplayName.c_str(), bSel))
-                    iSelectedList = i;
-                if (bSel)
-                    ImGui::SetItemDefaultFocus();
-            }
-            ImGui::EndCombo();
-        }
-        ImGui::Dummy(ImVec2(0.f, 6.f));
-        PushHudButtonStylePrimary();
-        if (ImGui::Button(UiTr(Tr::BtnLoadBuild), ImVec2(-1.f, 36.f)))
-        {
-            std::string err;
-            if (m_store.LoadByRelativePath(v[static_cast<size_t>(iSelectedList)].sRelativePath, m_loaded, err))
-            {
-                m_editor = m_loaded;
-                std::memset(cSaveFileBase, 0, sizeof(cSaveFileBase));
-                const std::string base = m_loaded.sName.empty() ? "build" : m_loaded.sName;
-                std::snprintf(cSaveFileBase, sizeof(cSaveFileBase), "%s", base.c_str());
-                m_iLastOverlayScrollStep = -999;
+                bSelInFiltered = true;
+                break;
             }
         }
-        PopHudButtonStyle();
+        if (!vPick.empty() && !bSelInFiltered)
+            iSelectedList = vPick.front();
+
+        ImGui::Dummy(ImVec2(0.f, 8.f));
+
+        if (vPick.empty())
+        {
+            ImGui::TextColored(kHudInfoText, "%s", UiTr(Tr::MsgNoBuildsForRace));
+        }
+        else
+        {
+            ImGui::AlignTextToFramePadding();
+            ImGui::TextUnformatted(UiTr(Tr::BuildSavedLabel));
+            ImGui::SetNextItemWidth(-1);
+            std::string comboPreview = v[static_cast<size_t>(iSelectedList)].sDisplayName;
+            if (ImGui::BeginCombo("##buildlist", comboPreview.c_str()))
+            {
+                for (int iPickSlot = 0; iPickSlot < static_cast<int>(vPick.size()); ++iPickSlot)
+                {
+                    const int iGlobal = vPick[static_cast<size_t>(iPickSlot)];
+                    const bool bSel = iGlobal == iSelectedList;
+                    if (ImGui::Selectable(v[static_cast<size_t>(iGlobal)].sDisplayName.c_str(), bSel))
+                        iSelectedList = iGlobal;
+                    if (bSel)
+                        ImGui::SetItemDefaultFocus();
+                }
+                ImGui::EndCombo();
+            }
+            ImGui::Dummy(ImVec2(0.f, 6.f));
+            PushHudButtonStylePrimary();
+            if (ImGui::Button(UiTr(Tr::BtnLoadBuild), ImVec2(-1.f, 36.f)))
+            {
+                std::string err;
+                if (m_store.LoadByRelativePath(v[static_cast<size_t>(iSelectedList)].sRelativePath, m_loaded, err))
+                {
+                    m_editor = m_loaded;
+                    std::memset(cSaveFileBase, 0, sizeof(cSaveFileBase));
+                    const std::string base = m_loaded.sName.empty() ? "build" : m_loaded.sName;
+                    std::snprintf(cSaveFileBase, sizeof(cSaveFileBase), "%s", base.c_str());
+                    m_iLastOverlayScrollStep = -999;
+                }
+            }
+            PopHudButtonStyle();
+        }
     }
     else
     {

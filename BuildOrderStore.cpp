@@ -67,10 +67,17 @@ void BuildOrderStore::CollectJsonFromDir(const std::filesystem::path& dir, const
             continue;
         BuildFileInfo info;
         info.sRelativePath = std::string(sRelativePrefix) + "/" + entry.path().filename().string();
+        info.eRace = BuildRace::Unknown;
         BuildOrder tmp;
         std::string err;
-        if (LoadByRelativePath(info.sRelativePath, tmp, err) && !tmp.sName.empty())
-            info.sDisplayName = tmp.sName + " (" + info.sRelativePath + ")";
+        if (LoadByRelativePath(info.sRelativePath, tmp, err))
+        {
+            info.eRace = tmp.eRace;
+            if (!tmp.sName.empty())
+                info.sDisplayName = tmp.sName + " (" + info.sRelativePath + ")";
+            else
+                info.sDisplayName = entry.path().filename().string();
+        }
         else
             info.sDisplayName = entry.path().filename().string();
         vBuilds.push_back(std::move(info));

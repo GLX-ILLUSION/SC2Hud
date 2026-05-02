@@ -372,6 +372,13 @@ int main(int, char**)
         const HRESULT result = g_pd3dDevice->Present(nullptr, nullptr, nullptr, nullptr);
         if (result == D3DERR_DEVICELOST)
             g_DeviceLost = true;
+
+        DWORD dwFrameRestMs = 96u;
+        if (bConfigMenuOpen || bKeyboardEffective)
+            dwFrameRestMs = 2u;
+        else if (buildHud.IsMatchClockRunning() || g_bOverlayPassMouseToHwnd)
+            dwFrameRestMs = 33u;
+        Sleep(dwFrameRestMs);
     }
 
     ::UnregisterHotKey(g_hWndOverlay, kHotKeyIdExit);

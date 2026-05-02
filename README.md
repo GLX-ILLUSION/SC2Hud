@@ -172,3 +172,6 @@ Software fornecido “como está”, sem garantias. Usa por tua conta e risco. N
 
 ---
 
+## Licença
+
+Define a licença do teu código adicionando um ficheiro `LICENSE` na raiz do repositório. As bibliotecas de terceiros (por exemplo Dear ImGui e nlohmann/json) mantêm as respetivas licenças nos projetos originais.

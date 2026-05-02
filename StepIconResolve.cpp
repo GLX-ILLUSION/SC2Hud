@@ -205,6 +205,8 @@ const char* GuessProtossIcon(const std::string& noteLower)
         return "blink";
     if (noteLower.find("probe") != std::string::npos || noteLower.find("sonda") != std::string::npos)
         return "probe";
+    if (noteLower.find("immortal") != std::string::npos)
+        return "immortal";
     static const char* kws[] = {
         "high templar", "dark templar", "mothership core",
         "robotics bay", "robotics facility", "twilight council", "cybernetics core",
@@ -219,7 +221,7 @@ const char* GuessProtossIcon(const std::string& noteLower)
         "templar",
         "zealot", "adept", "stalker", "sentry",
         "oracle", "phoenix",
-        "immortal", "observer",
+        "observer",
         "archon", "carrier", "colossus", "disruptor", "tempest",
         "mothership",
         "blink", "charge",
@@ -238,7 +240,7 @@ const char* GuessProtossIcon(const std::string& noteLower)
         "templar_archives",
         "zealot", "adept", "stalker", "sentry",
         "oracle", "phoenix",
-        "immortal", "observer",
+        "observer",
         "archon", "carrier", "colossus", "disruptor", "tempest",
         "mothership",
         "blink", "charge",
