@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Application">
+      <UniqueIdentifier>{c88b5a12-6f01-4a9d-9c4e-10a1b2c3d401}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HUD">
+      <UniqueIdentifier>{c88b5a12-6f01-4a9d-9c4e-10a1b2c3d402}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Build">
+      <UniqueIdentifier>{c88b5a12-6f01-4a9d-9c4e-10a1b2c3d403}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game Data">
+      <UniqueIdentifier>{c88b5a12-6f01-4a9d-9c4e-10a1b2c3d404}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering">
+      <UniqueIdentifier>{c88b5a12-6f01-4a9d-9c4e-10a1b2c3d405}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{c88b5a12-6f01-4a9d-9c4e-10a1b2c3d406}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui">
+      <UniqueIdentifier>{c88b5a12-6f01-4a9d-9c4e-10a1b2c3d407}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\Backends">
+      <UniqueIdentifier>{c88b5a12-6f01-4a9d-9c4e-10a1b2c3d408}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="BuildOrderUi.cpp">
+      <Filter>HUD</Filter>
+    </ClCompile>
+    <ClCompile Include="BuildOrderJson.cpp">
+      <Filter>Build</Filter>
+    </ClCompile>
+    <ClCompile Include="BuildOrderStore.cpp">
+      <Filter>Build</Filter>
+    </ClCompile>
+    <ClCompile Include="BuildOrderPlayback.cpp">
+      <Filter>Build</Filter>
+    </ClCompile>
+    <ClCompile Include="BuildOrderPasteParser.cpp">
+      <Filter>Build</Filter>
+    </ClCompile>
+    <ClCompile Include="Sc2StaticCosts.cpp">
+      <Filter>Game Data</Filter>
+    </ClCompile>
+    <ClCompile Include="IconTextureCache.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="StepIconResolve.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="MatchClock.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="PathUtils.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_draw.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_tables.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_widgets.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_demo.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_impl_dx9.cpp">
+      <Filter>ImGui\Backends</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_impl_win32.cpp">
+      <Filter>ImGui\Backends</Filter>
+    </ClCompile>
+    <ClCompile Include="UiLanguage.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BuildOrderUi.h">
+      <Filter>HUD</Filter>
+    </ClInclude>
+    <ClInclude Include="BuildOrderJson.h">
+      <Filter>Build</Filter>
+    </ClInclude>
+    <ClInclude Include="BuildOrderStore.h">
+      <Filter>Build</Filter>
+    </ClInclude>
+    <ClInclude Include="BuildOrderPlayback.h">
+      <Filter>Build</Filter>
+    </ClInclude>
+    <ClInclude Include="BuildOrderPasteParser.h">
+      <Filter>Build</Filter>
+    </ClInclude>
+    <ClInclude Include="BuildOrderTypes.h">
+      <Filter>Build</Filter>
+    </ClInclude>
+    <ClInclude Include="Sc2StaticCosts.h">
+      <Filter>Game Data</Filter>
+    </ClInclude>
+    <ClInclude Include="IconTextureCache.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="StepIconResolve.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="MatchClock.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="PathUtils.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="UiLanguage.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
